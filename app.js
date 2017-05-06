@@ -18,13 +18,12 @@ const pushDataAlgolia = function(data, callback) {
         if (err) {
             console.error(err);
             callback(err);
-            return;
         }
         else callback(null);
     });
-    //
 };
 
+<<<<<<< HEAD
 const searchAlias = function(aliasValue, callback) {
     index.search(aliasValue, {
     attributesToRetrieve: ['ObjectID', 'alias'],
@@ -40,6 +39,8 @@ const searchAlias = function(aliasValue, callback) {
     });
 }
 
+=======
+>>>>>>> 422f49bcf07f42ea916af76cc45b7add4e6b9ab7
 app.post('/alias', function (req, res) {
     if(!req.body) return res.status(500).send({message: "Body empty"});
     if(!req.body.alias) return res.status(500).send({message: "Alias is not in body"});
