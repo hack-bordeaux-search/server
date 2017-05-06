@@ -11,6 +11,12 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 
 var port = process.env.PORT || 3000;
 var private_key = process.env.PRIVATE_KEY || "nokey";
@@ -123,9 +129,17 @@ app.put('/alias/:id', function (req, res) {
     return;
 });
 
-app.get('/alias/:id', function (req, res) {
+app.get('/alias/:id/check', function (req, res) {
     searchAlias(req.params.id, (aliasElem)=> {
         if(!aliasElem) return res.status(200).send({available: true});
         if(aliasElem) return res.status(200).send({available: false});
     });
 });
+
+
+// app.get('/alias/:id', function(req, res) {
+//     let aliasName = req.params.id;
+//     let query = req.query;
+
+
+// });
