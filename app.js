@@ -141,15 +141,21 @@ app.get('/alias/:id', function(req, res) {
     let aliasName = req.params.id;
     let query = req.query;
     index.search(aliasName, {
-    attributesToRetrieve: ['alias'],
     restrictSearchableAttributes: ['alias']
     }, function searchDone(err, content) {
         if (err) return res.status(500).send(err);
+        
         let aliases = [];
         for(let elem of content.hits) {
-            aliases.push(elem.alias);
+            let aliasUsername = {};
+            aliasUsername.alias = elem.alias;
+            for(let serviceElem of elem.social_accounts) {
+                if(serviceElem.id === query.service) aliasUsername.username = serviceElem.username;
+            }
+            aliases.push(aliasUsername);
         }
-        return res.status(200).send(aliases);
+        return res.send(aliases);
+        // return res.status(200).send(aliases);
     });
 
 });
