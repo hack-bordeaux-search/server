@@ -137,9 +137,19 @@ app.get('/alias/:id/check', function (req, res) {
 });
 
 
-// app.get('/alias/:id', function(req, res) {
-//     let aliasName = req.params.id;
-//     let query = req.query;
+app.get('/alias/:id', function(req, res) {
+    let aliasName = req.params.id;
+    let query = req.query;
+    index.search(aliasName, {
+    attributesToRetrieve: ['alias'],
+    restrictSearchableAttributes: ['alias']
+    }, function searchDone(err, content) {
+        if (err) return res.status(500).send(err);
+        let aliases = [];
+        for(let elem of content.hits) {
+            aliases.push(elem.alias);
+        }
+        return res.status(200).send(aliases);
+    });
 
-
-// });
+});
