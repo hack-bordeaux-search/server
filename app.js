@@ -10,6 +10,11 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
+
+var port = process.env.PORT || 3000;
+app.listen(port);
+
+
 let index = algoliaClient.initIndex('alias');
 
 const pushDataAlgolia = function(data, callback) {
@@ -91,6 +96,3 @@ app.put('/alias', function (req, res) {
     return;
 });
 
-
-
-app.listen(3000);
