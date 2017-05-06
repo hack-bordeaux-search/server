@@ -16,14 +16,10 @@ const pushDataAlgolia = function(data, callback) {
         if (err) {
             console.error(err);
             callback(err);
-            return;
         }
         else callback(null);
     });
-    //
 };
-
-
 
 app.post('/alias', function (req, res) {
     if(!req.body) return res.status(500).send({message: "Body empty"});
