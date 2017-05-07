@@ -138,6 +138,7 @@ app.get('/alias/:id/check', function (req, res) {
 
 
 app.get('/alias/:id', function(req, res) {
+    if(!req.params.id || req.params.id === "") return res.status(200).send([]);
     let aliasName = req.params.id;
     let query = req.query;
     index.search(aliasName, {
@@ -152,10 +153,10 @@ app.get('/alias/:id', function(req, res) {
             for(let serviceElem of elem.social_accounts) {
                 if(serviceElem.id === query.service) aliasUsername.username = serviceElem.username;
             }
-            aliases.push(aliasUsername);
+            if(aliasUsername.username) aliases.push(aliasUsername);
+            
         }
-        return res.send(aliases);
-        // return res.status(200).send(aliases);
+        return res.status(200).send(aliases);
     });
 
 });
