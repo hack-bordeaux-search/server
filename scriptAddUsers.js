@@ -1,15 +1,17 @@
-let request = require('request-promise');
-let names = ["david", "cristian", "remi", "steve", "tom", "tim", "davide", "christian"];
+const request = require('request-promise');
+const names = ["david", "cristian", "remi", "steve", "tom", "tim", "davide", "christian"];
+const crypto = require('crypto');
+
+function randomValueHex (len) {
+    return crypto.randomBytes(Math.ceil(len/2))
+        .toString('hex') // convert to hexadecimal format
+        .slice(0,len);   // return required number of characters
+}
 
 for(let name of names) {
+
 	for(let i = 0; i < 10; i++) {
 		let postBody = {
-			"alias": name + String(i),
-			"profile": {
-				"name": "name name name",
-				"idnumber": "123456789A",
-				"country": "Spain"
-			}, 
 			"social_accounts": [
 				{
 					"id": "facebook",
@@ -25,24 +27,20 @@ for(let name of names) {
 				},
 				{
 					"id": "bitcoin",
-					"username": name + "_bitcoin_" + String(i) + String(i) + String(i)
+					"username": "0x" + randomValueHex(40)
 				},
 				{
 					"id": "nem",
-					"username": name + "__nem__" + String(i) + String(i) + String(i)
+					"username": "0x" + randomValueHex(40)
 				}
 			]
 		};
 
-		
-
-		let params = {method: 'POST',
-	      uri: "http://localhost:3000/alias",
+		let params = {method: 'PUT',
+	      uri: "http://localhost:3000/alias/" + name + String(i),
 	      body: postBody,
 	      json: true
 	    };
-
-	    console.log(params);
 
 	    request(params)
 	    .then(function(resp) {
@@ -51,6 +49,7 @@ for(let name of names) {
 	    .catch((err)=> {
 	      return console.log(err);
 	    });
+		console.log(postBody);
 	}
 }
 

@@ -20,6 +20,7 @@
   "dependencies": {
     "algoliasearch": "^3.22.1",
     "body-parser": "^1.17.1",
+    "crypto": "0.0.3",
     "express": "^4.15.2",
     "nem-sdk": "^1.1.2",
     "request-promise": "^4.2.0"

@@ -86,26 +86,33 @@ app.post('/alias', function (req, res) {
         return res.status(500).send({message: "Personal information not complete"});
     }
     let profile = req.body.profile;
+    profile.alias = req.body.alias;
  
 
     searchAlias(aliasInfo.alias, (exists)=> {
         if(exists) return res.status(500).send({message: "The alias is not available"});
         pushDataAlgolia(aliasInfo, (err)=> {
             if(err) return res.send(err);
-             // Create an NIS endpoint object
-            var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
 
-            // Create a common object holding key
-            var common = nem.model.objects.create("common")("", "d0733ac5bbf26156280f52a8377003760b5e5b000ed5669a79a54fd01df9933a");
+            try {
+                // Create an NIS endpoint object
+                var endpoint = nem.model.objects.create("endpoint")(nem.model.nodes.defaultTestnet, nem.model.nodes.defaultPort);
 
-            // Create an un-prepared transfer transaction object
-            var transferTransaction = nem.model.objects.create("transferTransaction")("TAYNFJAASOQ445STMYOWQ6IQVR2AH44AMJXDYRHC", 0, JSON.stringify(profile));
+                // Create a common object holding key
+                var common = nem.model.objects.create("common")("", "d0733ac5bbf26156280f52a8377003760b5e5b000ed5669a79a54fd01df9933a");
 
-            // Prepare the transfer transaction object
-            var transactionEntity = nem.model.transactions.prepare("transferTransaction")(common, transferTransaction, nem.model.network.data.testnet.id);
+                // Create an un-prepared transfer transaction object
+                var transferTransaction = nem.model.objects.create("transferTransaction")("TAYNFJAASOQ445STMYOWQ6IQVR2AH44AMJXDYRHC", 0, JSON.stringify(profile));
 
-            // Serialize transfer transaction and announce
-            nem.model.transactions.send(common, transactionEntity, endpoint);
+                // Prepare the transfer transaction object
+                var transactionEntity = nem.model.transactions.prepare("transferTransaction")(common, transferTransaction, nem.model.network.data.testnet.id);
+
+                // Serialize transfer transaction and announce
+                nem.model.transactions.send(common, transactionEntity, endpoint);
+            } catch (err) {
+                // handle the error safely
+                console.log("There is some problem with NEM")
+            }            
             return res.status(200).send({message: "Alias created succesfully"});
         });
     })
